@@ -68,6 +68,9 @@ RSpec.configure do |config|
   # Lets specs call create/build directly instead of FactoryBot.create
   config.include FactoryBot::Syntax::Methods
 
+  # sign_in / sign_out helpers in request specs
+  config.include Devise::Test::IntegrationHelpers, type: :request
+
   # travel_to / freeze_time
   config.include ActiveSupport::Testing::TimeHelpers
 

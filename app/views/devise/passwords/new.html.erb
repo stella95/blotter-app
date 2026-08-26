@@ -1,0 +1,38 @@
+<% content_for :title, t(".title") %>
+
+<div class="auth-split">
+  <%= render "devise/shared/intro_panel" %>
+
+  <div class="auth-form-panel">
+    <div class="auth-form">
+      <div class="auth-form__title"><%= t(".title") %></div>
+      <div class="auth-form__subtitle"><%= t(".subtitle") %></div>
+
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+        <% if resource.errors.any? %>
+          <div class="form-errors" role="alert">
+            <ul>
+              <% resource.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="field">
+          <%= f.label :email %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+        </div>
+
+        <%= f.submit t(".submit"), class: "btn btn-primary" %>
+      <% end %>
+
+      <div class="auth-form__switch">
+        <span><%= t(".remembered") %></span>
+        <%= link_to t(".sign_in"), new_user_session_path %>
+      </div>
+    </div>
+
+    <%= render "devise/shared/mode_switch", active: :reset %>
+  </div>
+</div>

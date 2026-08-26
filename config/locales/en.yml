@@ -1,31 +1,173 @@
 # Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
+# are automatically loaded by Rails. Greek and German are planned for v2;
+# every user-facing label goes through here now so adding those locale files
+# later is purely additive, not a retrofit.
 en:
-  hello: "Hello world"
+  date:
+    formats:
+      full: "%A, %-d %B %Y"
+
+  app:
+    name: "Blotter"
+
+  nav:
+    dashboard: "Dashboard"
+    portfolios: "Portfolios"
+    account_suffix: "account"
+    sign_out: "Sign out"
+
+  dashboard:
+    index:
+      title: "Dashboard"
+      as_of: "As of %{date}"
+      empty: "No portfolios yet."
+      create_first: "Create your first portfolio"
+      pending_charts: "Charts and totals land here once entries, asset prices, and the nightly snapshot job exist. For now, your portfolios:"
+
+  portfolios:
+    index:
+      title: "Portfolios"
+      new_portfolio: "New portfolio"
+      archive: "Archive"
+    show:
+      currency: "Currency"
+      status: "Status"
+      status_active: "Active"
+      status_archived: "Archived"
+      edit: "Edit"
+      all_portfolios: "All portfolios"
+      delete: "Delete"
+    new:
+      title: "New portfolio"
+    edit:
+      browser_title: "Edit %{name}"
+      heading: "Edit portfolio"
+    form:
+      cancel: "Cancel"
+    flash:
+      created: "Portfolio created."
+      updated: "Portfolio updated."
+      deleted: "Portfolio deleted."
+      archived: "Portfolio archived."
+      delete_blocked: "Portfolio has entries and can't be deleted. Archive it instead."
+
+  devise:
+    shared:
+      intro_panel:
+        headline: "Every trade, every fee, in one place."
+        subtext: "No dashboards, no charts you don't need, one list you can actually read."
+        ledger_date: "Date"
+        ledger_entry: "Entry"
+        ledger_amount: "Amount"
+      mode_switch:
+        sign_in: "Sign in"
+        sign_up: "Sign up"
+        reset: "Reset"
+    sessions:
+      new:
+        title: "Sign in"
+        subtitle: "Welcome back."
+        remember_me: "Remember me"
+        forgot_password: "Forgot password?"
+        submit: "Sign in"
+        no_account: "No account?"
+        create_one: "Create one"
+        resend_confirmation: "Didn't get a confirmation email?"
+        account_locked: "Account locked?"
+    registrations:
+      new:
+        title: "Create your ledger"
+        subtitle: "One account, all your portfolios."
+        min_chars: "%{count} characters minimum, with an uppercase letter, a lowercase letter, a number, and a special character"
+        submit: "Create account"
+        already_have_one: "Already have one?"
+        sign_in: "Sign in"
+      edit:
+        title: "Account"
+        last_signed_in: "Last signed in %{time}"
+        password_hint: "Leave blank if you don't want to change it."
+        min_chars: "%{count} characters minimum, with an uppercase letter, a lowercase letter, a number, and a special character"
+        current_password_hint: "We need your current password to confirm changes."
+        submit: "Update account"
+        cancel_notice: "Unhappy? This can't be undone."
+        cancel_submit: "Cancel my account"
+        cancel_confirm: "Are you sure?"
+    passwords:
+      new:
+        title: "Reset password"
+        subtitle: "We'll email you a link to set a new one."
+        submit: "Send reset link"
+        remembered: "Remembered it?"
+        sign_in: "Sign in"
+      edit:
+        title: "Choose a new password"
+        subtitle: "Almost done."
+        new_password: "New password"
+        confirm_password: "Confirm new password"
+        min_chars: "%{count} characters minimum, with an uppercase letter, a lowercase letter, a number, and a special character"
+        submit: "Change password"
+    confirmations:
+      new:
+        title: "Resend confirmation"
+        subtitle: "We'll send a new confirmation link to your email."
+        submit: "Resend confirmation instructions"
+        already_confirmed: "Already confirmed?"
+        sign_in: "Sign in"
+    unlocks:
+      new:
+        title: "Unlock account"
+        subtitle: "We'll send a new unlock link to your email."
+        submit: "Resend unlock instructions"
+        sign_in: "Back to sign in"
+    mailer:
+      confirmation_instructions:
+        greeting: "Welcome, %{email}!"
+        instructions: "You can confirm your Blotter account through the link below."
+        action: "Confirm my account"
+      reset_password_instructions:
+        greeting: "Hello, %{email}!"
+        instructions: "Someone has requested a link to change your Blotter password. You can do this through the link below."
+        action: "Change my password"
+        ignore: "If you didn't request this, please ignore this email."
+        unchanged: "Your password won't change until you access the link above and create a new one."
+      unlock_instructions:
+        greeting: "Hello, %{email}!"
+        instructions: "Your Blotter account has been locked due to too many failed sign in attempts. Click the link below to unlock it."
+        action: "Unlock my account"
+
+  activerecord:
+    attributes:
+      portfolio:
+        name: "Name"
+        currency: "Currency"
+      user:
+        first_name: "First name"
+        last_name: "Last name"
+        email: "Email"
+        password: "Password"
+        password_confirmation: "Password confirmation"
+        current_password: "Current password"
+        remember_me: "Remember me"
+      entry_line_item:
+        action: "Action"
+        quantity: "Quantity"
+        price_per_unit: "Price per unit"
+        amount: "Amount"
+    errors:
+      models:
+        user:
+          attributes:
+            password:
+              complexity: "must include an uppercase letter, a lowercase letter, a number, and a special character"
+        entry:
+          attributes:
+            occurred_on:
+              future: "cannot be in the future"
+        entry_line_item:
+          attributes:
+            amount:
+              mismatch: "must equal quantity times price per unit (expected %{expected})"
+        category_entry_line_item:
+          attributes:
+            category:
+              different_user: "belongs to a different user"

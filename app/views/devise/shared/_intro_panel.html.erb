@@ -1,0 +1,36 @@
+<div class="auth-intro">
+  <div class="auth-intro__brand"><%= t("app.name") %></div>
+
+  <div class="auth-intro__pitch">
+    <div class="auth-intro__headline"><%= t(".headline") %></div>
+    <div class="auth-intro__subtext"><%= t(".subtext") %></div>
+  </div>
+
+  <div class="auth-intro__ledger">
+    <div class="auth-intro__ledger-header">
+      <span><%= t(".ledger_date") %></span><span><%= t(".ledger_entry") %></span><span><%= t(".ledger_amount") %></span>
+    </div>
+    <div class="auth-intro__ledger-row">
+      <span>5 Aug</span><span>Monthly ETF purchase</span><span>&minus;&euro;1,250.40</span>
+    </div>
+    <div class="auth-intro__ledger-row">
+      <span>2 Aug</span><span>VWCE dividend</span><span>+&euro;41.20</span>
+    </div>
+    <div class="auth-intro__ledger-row">
+      <span>1 Aug</span><span>Salary transfer in</span><span>+&euro;1,800.00</span>
+    </div>
+    <div class="auth-intro__ledger-row">
+      <span>31 Jul</span><span>Custody fee</span><span>&minus;&euro;3.00</span>
+    </div>
+    <div class="auth-intro__ledger-row">
+      <span>22 Jul</span><span>Bond coupon</span><span>+&euro;18.60</span>
+    </div>
+    <svg viewBox="0 0 400 54" class="auth-intro__sparkline">
+      <polyline points="0,44 40,40 80,42 120,33 160,35 200,26 240,29 280,20 320,23 360,12 400,8"
+                fill="none" stroke="oklch(0.5 0.07 150)" stroke-width="2"
+                stroke-linejoin="round" stroke-linecap="round"></polyline>
+      <polygon points="0,44 40,40 80,42 120,33 160,35 200,26 240,29 280,20 320,23 360,12 400,8 400,54 0,54"
+               fill="oklch(0.5 0.07 150)" opacity="0.07"></polygon>
+    </svg>
+  </div>
+</div>

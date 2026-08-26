@@ -1,0 +1,52 @@
+<% content_for :title, t(".title") %>
+
+<div class="auth-split">
+  <%= render "devise/shared/intro_panel" %>
+
+  <div class="auth-form-panel">
+    <div class="auth-form">
+      <div class="auth-form__title"><%= t(".title") %></div>
+      <div class="auth-form__subtitle"><%= t(".subtitle") %></div>
+
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <div class="field">
+          <%= f.label :email %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+        </div>
+
+        <div class="field">
+          <%= f.label :password %>
+          <%= f.password_field :password, autocomplete: "current-password" %>
+        </div>
+
+        <% if devise_mapping.rememberable? %>
+          <div class="field">
+            <%= f.check_box :remember_me %>
+            <%= f.label :remember_me, t(".remember_me") %>
+          </div>
+        <% end %>
+
+        <div class="auth-form__forgot">
+          <%= link_to t(".forgot_password"), new_user_password_path %>
+        </div>
+
+        <%= f.submit t(".submit"), class: "btn btn-primary" %>
+      <% end %>
+
+      <div class="auth-form__switch">
+        <span><%= t(".no_account") %></span>
+        <%= link_to t(".create_one"), new_user_registration_path %>
+      </div>
+
+      <div class="auth-form__switch">
+        <%= link_to t(".resend_confirmation"), new_user_confirmation_path %>
+      </div>
+
+      <div class="auth-form__switch">
+        <%= link_to t(".account_locked"), new_user_unlock_path %>
+      </div>
+    </div>
+
+    <%= render "devise/shared/mode_switch", active: :signin %>
+  </div>
+</div>

@@ -33,4 +33,46 @@ RSpec.describe User do
       end
     end
   end
+
+  describe "password complexity" do
+    it "accepts a password with upper, lower, digit, and a special character" do
+      expect(build(:user, password: "Correct-Horse-Battery-9")).to be_valid
+    end
+
+    it "rejects a password missing an uppercase letter" do
+      expect(build(:user, password: "correct-horse-battery-9")).not_to be_valid
+    end
+
+    it "rejects a password missing a digit" do
+      expect(build(:user, password: "Correct-Horse-Battery")).not_to be_valid
+    end
+
+    it "rejects a password missing a special character" do
+      expect(build(:user, password: "CorrectHorseBattery9")).not_to be_valid
+    end
+
+    it "rejects a password below the minimum length even if otherwise complex" do
+      expect(build(:user, password: "Ab9!")).not_to be_valid
+    end
+  end
+
+  describe "#short_name" do
+    it "is first name plus last initial when both are present" do
+      user = build(:user, first_name: "Marta", last_name: "Berg")
+
+      expect(user.short_name).to eq("Marta B.")
+    end
+
+    it "is just the first name when there is no last name" do
+      user = build(:user, first_name: "Marta", last_name: nil)
+
+      expect(user.short_name).to eq("Marta")
+    end
+
+    it "is nil when there is no first name" do
+      user = build(:user, first_name: nil)
+
+      expect(user.short_name).to be_nil
+    end
+  end
 end

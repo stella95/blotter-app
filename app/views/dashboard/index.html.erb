@@ -1,0 +1,29 @@
+<% content_for :title, t(".title") %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title"><%= t(".title") %></h1>
+    <div class="page-subtitle"><%= t(".as_of", date: l(Date.current, format: :full)) %></div>
+  </div>
+</div>
+
+<% if @portfolios.empty? %>
+  <div class="card">
+    <p><%= t(".empty") %></p>
+    <%= link_to t(".create_first"), new_portfolio_path, class: "btn btn-primary" %>
+  </div>
+<% else %>
+  <div class="card">
+    <p class="page-subtitle" style="margin-top: 0;">
+      <%= t(".pending_charts") %>
+    </p>
+    <ul class="record-list">
+      <% @portfolios.each do |portfolio| %>
+        <li>
+          <span class="record-list__label"><%= link_to portfolio.name, portfolio %></span>
+          <span class="record-list__meta"><%= portfolio.currency %></span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

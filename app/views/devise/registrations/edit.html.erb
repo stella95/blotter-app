@@ -1,0 +1,72 @@
+<% content_for :title, t(".title") %>
+
+<div class="page-header">
+  <h1 class="page-title"><%= t(".title") %></h1>
+</div>
+
+<% if current_user.last_sign_in_at %>
+  <p class="page-subtitle">
+    <%= t(".last_signed_in", time: l(current_user.last_sign_in_at, format: :long)) %>
+  </p>
+<% end %>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <% if resource.errors.any? %>
+    <div class="form-errors" role="alert">
+      <ul>
+        <% resource.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card">
+    <div class="field">
+      <%= f.label :first_name %>
+      <%= f.text_field :first_name %>
+    </div>
+
+    <div class="field">
+      <%= f.label :last_name %>
+      <%= f.text_field :last_name %>
+    </div>
+
+    <div class="field">
+      <%= f.label :email %>
+      <%= f.email_field :email, autocomplete: "email" %>
+    </div>
+
+    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+      <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :password %>
+      <span class="field-hint">
+        <%= t(".password_hint") %>
+        <% if @minimum_password_length %><%= t(".min_chars", count: @minimum_password_length) %><% end %>
+      </span>
+      <%= f.password_field :password, autocomplete: "new-password" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :current_password %>
+      <span class="field-hint"><%= t(".current_password_hint") %></span>
+      <%= f.password_field :current_password, autocomplete: "current-password" %>
+    </div>
+
+    <%= f.submit t(".submit"), class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<div class="card" style="margin-top: 16px;">
+  <p><%= t(".cancel_notice") %></p>
+  <%= button_to t(".cancel_submit"), registration_path(resource_name),
+        data: { turbo_confirm: t(".cancel_confirm") }, method: :delete, class: "btn btn-danger" %>
+</div>
