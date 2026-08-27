@@ -13,17 +13,77 @@
     <%= link_to t(".create_first"), new_portfolio_path, class: "btn btn-primary" %>
   </div>
 <% else %>
-  <div class="card">
-    <p class="page-subtitle" style="margin-top: 0;">
-      <%= t(".pending_charts") %>
-    </p>
-    <ul class="record-list">
-      <% @portfolios.each do |portfolio| %>
-        <li>
-          <span class="record-list__label"><%= link_to portfolio.name, portfolio %></span>
-          <span class="record-list__meta"><%= portfolio.currency %></span>
-        </li>
+  <% if @unpriced_count.positive? %>
+    <div class="banner banner-warning">
+      <%= t(".unpriced_warning", count: @unpriced_count) %>
+      <%= link_to t(".review_prices"), assets_path %>
+    </div>
+  <% end %>
+
+  <% if @totals_by_currency.any? %>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;">
+      <% @totals_by_currency.each do |currency, total| %>
+        <div class="card">
+          <div class="page-subtitle" style="text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0;">
+            <%= @portfolio_names_by_currency.fetch(currency, currency) %> &middot; <%= currency %>
+          </div>
+          <div style="font-family: var(--font-serif); font-size: 30px; font-weight: 600; margin-top: 6px;"><%= money(total, currency) %></div>
+        </div>
       <% end %>
-    </ul>
+    </div>
+  <% end %>
+
+  <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px;">
+    <div class="card">
+      <div style="font-weight: 600; margin-bottom: 12px;"><%= t(".current_holdings") %></div>
+      <% if @holdings.empty? %>
+        <p class="page-subtitle" style="margin-top: 0;"><%= t(".no_holdings") %></p>
+      <% else %>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th><%= t(".asset") %></th>
+              <th><%= t(".qty") %></th>
+              <th><%= t(".price") %></th>
+              <th><%= t(".value") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @holdings.each do |holding| %>
+              <tr>
+                <td><strong><%= holding.asset.symbol %></strong></td>
+                <td><%= holding.quantity %></td>
+                <td><%= holding.price ? money(holding.price, holding.asset.currency) : t(".no_price") %></td>
+                <td><%= holding.value ? money(holding.value, holding.asset.currency) : t(".no_price") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <span style="font-weight: 600;"><%= t(".recent_entries") %></span>
+        <%= link_to t(".view_all"), entries_path %>
+      </div>
+      <% if @recent_line_items.empty? %>
+        <p class="page-subtitle" style="margin-top: 0;"><%= t(".no_entries") %></p>
+      <% else %>
+        <ul class="record-list">
+          <% @recent_line_items.each do |line_item| %>
+            <li style="flex-direction: column; align-items: flex-start; gap: 2px;">
+              <div style="display: flex; justify-content: space-between; width: 100%;">
+                <span class="record-list__label"><%= line_item.display_description %></span>
+                <strong><%= money(line_item.amount, line_item.asset.currency) %></strong>
+              </div>
+              <span class="record-list__meta"><%= l(line_item.occurred_on, format: :long) %> &middot; <%= line_item.action.humanize %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
   </div>
+
+  <p class="page-subtitle" style="margin-top: 16px;"><%= t(".chart_pending") %></p>
 <% end %>

@@ -102,6 +102,48 @@ RSpec.describe Portfolio do
     end
   end
 
+  describe ".combined_holdings" do
+    it "merges the same asset held across two portfolios into one holding" do
+      user = create(:user)
+      asset = create(:asset)
+      create(:asset_price, asset:, price: 100, as_of: 1.day.ago)
+      retirement = create(:portfolio, user:)
+      brokerage = create(:portfolio, user:)
+      create(:entry_line_item, entry: create(:entry, portfolio: retirement), asset:, quantity: 4, price_per_unit: 90, amount: -360)
+      create(:entry_line_item, entry: create(:entry, portfolio: brokerage), asset:, quantity: 6, price_per_unit: 90, amount: -540)
+
+      holdings = described_class.combined_holdings([ retirement, brokerage ])
+
+      expect(holdings.size).to eq(1)
+      expect(holdings.first.quantity).to eq(10)
+      expect(holdings.first.value).to eq(1000)
+    end
+  end
+
+  describe ".totals_by_currency" do
+    it "sums holding values per currency, never blending them" do
+      eur_asset = create(:asset, currency: "EUR")
+      usd_asset = create(:asset, currency: "USD")
+      holdings = [
+        Portfolio::Holding.new(eur_asset, 1, 100, 100),
+        Portfolio::Holding.new(usd_asset, 1, 50, 50)
+      ]
+
+      expect(described_class.totals_by_currency(holdings)).to eq("EUR" => 100, "USD" => 50)
+    end
+  end
+
+  describe ".names_by_currency" do
+    it "labels a currency by whichever portfolios actually hold something in it" do
+      user = create(:user)
+      brokerage = create(:portfolio, user:, name: "Brokerage")
+      apple = create(:asset, symbol: "AAPL", currency: "USD")
+      create(:entry_line_item, entry: create(:entry, portfolio: brokerage), asset: apple, quantity: 1, price_per_unit: 100, amount: -100)
+
+      expect(described_class.names_by_currency([ brokerage ])).to eq("USD" => "Brokerage")
+    end
+  end
+
   describe "deletion" do
     it "is blocked once the portfolio has entries" do
       portfolio = create(:portfolio)

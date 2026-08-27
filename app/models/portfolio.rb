@@ -37,4 +37,25 @@ class Portfolio < ApplicationRecord
   def currencies_held
     current_holdings.map { |holding| holding.asset.currency }.uniq.sort
   end
+
+  def self.combined_holdings(portfolios)
+    portfolios.flat_map(&:current_holdings)
+              .group_by(&:asset)
+              .map do |asset, holdings|
+      quantity = holdings.sum(&:quantity)
+      price = asset.latest_price&.price
+      Holding.new(asset, quantity, price, price && quantity * price)
+    end
+  end
+
+  def self.totals_by_currency(holdings)
+    holdings.group_by { |holding| holding.asset.currency }
+            .transform_values { |hs| hs.sum { |h| h.value || 0 } }
+  end
+
+  def self.names_by_currency(portfolios)
+    portfolios.each_with_object(Hash.new { |h, k| h[k] = [] }) do |portfolio, names|
+      portfolio.currencies_held.each { |currency| names[currency] << portfolio.name }
+    end.transform_values { |names| names.join(" + ") }
+  end
 end
