@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   end
 
   resources :entries, only: %i[index new create]
+  resources :categories, only: %i[index new create destroy]
 
   # path: avoids colliding with Rails' own asset pipeline prefix (/assets),
   # which is served by middleware ahead of the router. Route helper names

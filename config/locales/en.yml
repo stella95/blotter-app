@@ -16,6 +16,7 @@ en:
     new_entry: "New entry"
     ledger: "Ledger"
     assets: "Assets & prices"
+    categories: "Categories"
     account_suffix: "account"
     sign_out: "Sign out"
 
@@ -128,6 +129,23 @@ en:
     flash:
       created: "Entry saved."
 
+  categories:
+    index:
+      title: "Categories"
+      new_category: "New category"
+      entry_count:
+        one: "%{count} entry"
+        other: "%{count} entries"
+      delete: "Delete category"
+      delete_confirm: "Delete this category? It stays off any entries it tagged, the entries themselves are untouched."
+    new:
+      title: "New category"
+      color_hint: "Used consistently everywhere this category appears."
+      cancel: "Cancel"
+    flash:
+      created: "Category created."
+      deleted: "Category deleted."
+
   devise:
     shared:
       intro_panel:
@@ -223,6 +241,9 @@ en:
         currency: "Currency"
       asset_price:
         price: "Price"
+      category:
+        name: "Name"
+        color: "Color"
       user:
         first_name: "First name"
         last_name: "Last name"

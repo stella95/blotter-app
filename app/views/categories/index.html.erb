@@ -1,0 +1,22 @@
+<% content_for :title, t(".title") %>
+
+<div class="page-header">
+  <h1 class="page-title"><%= t(".title") %></h1>
+  <%= link_to t(".new_category"), new_category_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <ul class="record-list">
+    <% @categories.each do |category| %>
+      <li>
+        <span class="tag-picker__dot" style="background: <%= category.color.presence || "#7a7a7a" %>;"></span>
+        <span class="record-list__label"><%= category.name %></span>
+        <span class="record-list__meta"><%= t(".entry_count", count: category.entry_line_items.count) %></span>
+        <%= button_to category_path(category), method: :delete, class: "icon-remove",
+              aria: { label: t(".delete") }, data: { turbo_confirm: t(".delete_confirm") } do %>
+          &times;
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

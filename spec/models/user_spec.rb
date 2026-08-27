@@ -4,6 +4,14 @@ RSpec.describe User do
   it { is_expected.to have_many(:portfolios).dependent(:destroy) }
   it { is_expected.to have_many(:categories).dependent(:destroy) }
 
+  describe "default categories" do
+    it "seeds a starter set on creation so the picker is never empty" do
+      user = create(:user)
+
+      expect(user.categories.pluck(:name)).to contain_exactly("Core", "Fees", "Income")
+    end
+  end
+
   describe "time_zone" do
     it "defaults to UTC" do
       expect(described_class.new.time_zone).to eq("UTC")

@@ -13,9 +13,9 @@ RSpec.describe Category do
     # Categories are curated per user, so two people can both have "Fees"
     # without colliding.
     it "lets two users each define the same name" do
-      create(:category, user: create(:user), name: "Fees")
+      create(:category, user: create(:user), name: "Speculative")
 
-      expect(build(:category, user: create(:user), name: "Fees")).to be_valid
+      expect(build(:category, user: create(:user), name: "Speculative")).to be_valid
     end
 
     it "accepts a blank colour" do

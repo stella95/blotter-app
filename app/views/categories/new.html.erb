@@ -1,0 +1,35 @@
+<% content_for :title, t(".title") %>
+
+<div class="page-header">
+  <h1 class="page-title"><%= t(".title") %></h1>
+</div>
+
+<%= form_with model: @category do |form| %>
+  <% if @category.errors.any? %>
+    <div class="form-errors" role="alert">
+      <ul>
+        <% @category.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card">
+    <div class="field">
+      <%= form.label :name %>
+      <%= form.text_field :name %>
+    </div>
+
+    <div class="field">
+      <%= form.label :color %>
+      <%= form.color_field :color, value: (form.object.color.presence || "#3f7d58") %>
+      <span class="field-hint"><%= t(".color_hint") %></span>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit class: "btn btn-primary" %>
+      <%= link_to t(".cancel"), categories_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>

@@ -7,6 +7,9 @@ class User < ApplicationRecord
   has_many :categories, dependent: :destroy
   has_many :entries, through: :portfolios
 
+  DEFAULT_CATEGORIES = %w[Core Fees Income].freeze
+  after_create :seed_default_categories
+
   validates :time_zone, presence: true,
                         inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }
 
@@ -25,6 +28,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def seed_default_categories
+    DEFAULT_CATEGORIES.each { |name| categories.create!(name:) }
+  end
 
   def password_complexity
     return if password.blank?
