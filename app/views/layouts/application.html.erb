@@ -46,6 +46,12 @@
             <li><%= link_to root_path, class: nav_item_class(root_path) do %>
               <span class="nav-item__dot"></span><%= t("nav.dashboard") %>
             <% end %></li>
+            <li><%= link_to entries_path, class: nav_item_class(entries_path) do %>
+              <span class="nav-item__dot"></span><%= t("nav.ledger") %>
+            <% end %></li>
+            <li><%= link_to new_entry_path, class: nav_item_class(new_entry_path) do %>
+              <span class="nav-item__dot"></span><%= t("nav.new_entry") %>
+            <% end %></li>
             <li><%= link_to portfolios_path, class: nav_item_class(portfolios_path) do %>
               <span class="nav-item__dot"></span><%= t("nav.portfolios") %>
             <% end %></li>

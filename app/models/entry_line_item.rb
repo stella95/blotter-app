@@ -19,11 +19,13 @@ class EntryLineItem < ApplicationRecord
   validates :quantity, numericality: { greater_than: 0 }, if: :unit_bearing?
   validates :price_per_unit, presence: true, if: :buy_or_sell?
 
-  # Fees are always their own line item, so a buy/sell amount is exempt from
-  # nothing: it should always equal quantity * price_per_unit exactly.
   validate :amount_matches_trade_value, if: :buy_or_sell?
 
   scope :unit_bearing, -> { where(action: UNIT_BEARING_ACTIONS) }
+  scope :for_user, ->(user) { joins(entry: :portfolio).where(portfolios: { user_id: user.id }) }
+  scope :in_portfolio, ->(portfolio_id) { joins(:entry).where(entries: { portfolio_id: }) }
+  scope :with_action, ->(action) { where(action:) }
+  scope :chronological, -> { joins(:entry).order("entries.occurred_on DESC, entry_line_items.id DESC") }
 
   def unit_bearing?
     UNIT_BEARING_ACTIONS.include?(action)
@@ -41,6 +43,10 @@ class EntryLineItem < ApplicationRecord
     end
   end
 
+  def display_description
+    notes.presence || entry.description.presence || "#{action.humanize} #{asset.symbol}"
+  end
+
   private
 
   def amount_matches_trade_value
@@ -50,6 +56,6 @@ class EntryLineItem < ApplicationRecord
     expected = -expected if buy?
     return if amount == expected
 
-    errors.add(:amount, "must equal quantity times price per unit (expected #{expected})")
+    errors.add(:amount, :mismatch, expected: expected)
   end
 end

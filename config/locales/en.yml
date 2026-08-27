@@ -13,6 +13,8 @@ en:
   nav:
     dashboard: "Dashboard"
     portfolios: "Portfolios"
+    new_entry: "New entry"
+    ledger: "Ledger"
     assets: "Assets & prices"
     account_suffix: "account"
     sign_out: "Sign out"
@@ -88,6 +90,43 @@ en:
     flash:
       created: "Asset created."
       price_set: "Price set for %{symbol}."
+
+  entries:
+    index:
+      title: "Ledger"
+      new_entry: "New entry"
+      all_portfolios: "All portfolios"
+      all_assets: "All assets"
+      all_actions: "All actions"
+      date: "Date"
+      description: "Description"
+      portfolio: "Portfolio"
+      asset: "Asset"
+      action: "Action"
+      qty: "Qty"
+      amount: "Amount"
+      categories: "Categories"
+    new:
+      title: "New entry"
+      subtitle: "A single trade is usually a buy line plus a fee line."
+      no_portfolios: "You need a portfolio before you can record an entry."
+      create_portfolio: "Create your first portfolio"
+      date: "Date"
+      portfolio: "Portfolio"
+      asset: "Asset"
+      new_asset: "+ New asset"
+      action: "Action"
+      qty: "Qty"
+      price: "Price"
+      amount: "Amount"
+      categories: "Categories"
+      add_line: "+ Add line"
+      remove_line: "Remove line"
+      tag: "tag"
+      submit: "Save entry"
+      cancel: "Cancel"
+    flash:
+      created: "Entry saved."
 
   devise:
     shared:
@@ -192,9 +231,31 @@ en:
         password_confirmation: "Password confirmation"
         current_password: "Current password"
         remember_me: "Remember me"
+      entry:
+        occurred_on: "Date"
+        description: "Description"
+        portfolio_id: "Portfolio"
+      entry_line_item:
+        action: "Action"
+        quantity: "Quantity"
+        price_per_unit: "Price per unit"
+        amount: "Amount"
+        category_ids: "Categories"
     errors:
       models:
         user:
           attributes:
             password:
               complexity: "must include an uppercase letter, a lowercase letter, a number, and a special character"
+        entry:
+          attributes:
+            occurred_on:
+              future: "cannot be in the future"
+        entry_line_item:
+          attributes:
+            amount:
+              mismatch: "must equal quantity times price per unit (expected %{expected})"
+        category_entry_line_item:
+          attributes:
+            category:
+              different_user: "belongs to a different user"

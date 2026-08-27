@@ -1,0 +1,77 @@
+<% content_for :title, t(".title") %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title"><%= t(".title") %></h1>
+    <div class="page-subtitle"><%= t(".subtitle") %></div>
+  </div>
+</div>
+
+<% if @entry.nil? %>
+  <div class="card">
+    <p><%= t(".no_portfolios") %></p>
+    <%= link_to t(".create_portfolio"), new_portfolio_path, class: "btn btn-primary" %>
+  </div>
+<% else %>
+  <%= form_with model: @entry, url: entries_path, data: { controller: "nested-form" } do |form| %>
+    <% if @entry.errors.any? %>
+      <div class="form-errors" role="alert">
+        <ul>
+          <% @entry.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="card">
+      <div class="entry-header-fields">
+        <div class="field">
+          <%= form.label :occurred_on, t(".date") %>
+          <%= form.date_field :occurred_on, value: (form.object.occurred_on || Date.current) %>
+        </div>
+
+        <div class="field">
+          <%= form.label :description %>
+          <%= form.text_field :description %>
+        </div>
+
+        <div class="field">
+          <%= form.label :portfolio_id, t(".portfolio") %>
+          <%= form.select :portfolio_id, @portfolios.map { |p| [p.name, p.id] } %>
+        </div>
+      </div>
+
+      <hr class="form-divider">
+
+      <div class="line-item-header">
+        <span><%= t(".asset") %></span>
+        <span><%= t(".action") %></span>
+        <span><%= t(".qty") %></span>
+        <span><%= t(".price") %></span>
+        <span><%= t(".amount") %></span>
+        <span><%= t(".categories") %></span>
+        <span></span>
+      </div>
+
+      <div data-nested-form-target="lines">
+        <%= form.fields_for :entry_line_items do |line_fields| %>
+          <%= render "line_item_fields", f: line_fields %>
+        <% end %>
+      </div>
+
+      <template data-nested-form-target="template">
+        <%= form.fields_for :entry_line_items, EntryLineItem.new, child_index: "NEW_RECORD" do |line_fields| %>
+          <%= render "line_item_fields", f: line_fields %>
+        <% end %>
+      </template>
+
+      <button type="button" class="btn btn-dashed" data-action="nested-form#add"><%= t(".add_line") %></button>
+
+      <div class="form-actions">
+        <%= form.submit t(".submit"), class: "btn btn-primary" %>
+        <%= link_to t(".cancel"), entries_path, class: "btn" %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

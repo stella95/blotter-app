@@ -305,6 +305,13 @@ h1, h2, h3 {
   border-color: transparent;
 }
 
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
 .tag {
   display: inline-flex;
   align-items: center;
@@ -313,6 +320,9 @@ h1, h2, h3 {
   padding: 2px 8px;
   border-radius: var(--radius-pill);
   /* background-color and color set inline per category */
+}
+.tag[hidden] {
+  display: none;
 }
 
 /* ---------- Forms ---------- */
@@ -357,6 +367,13 @@ select {
   width: 100%;
 }
 
+/* The amount field on a buy/sell line is computed from quantity * price,
+   not typed, so it reads visually like the other disabled controls. */
+input[type="number"][readonly] {
+  background: var(--color-hover);
+  color: var(--color-text-muted);
+}
+
 /* Plain, non-financial-looking spinner arrows on every number input, in
    forms and in the plain input[type=number] used for setting a price. */
 input[type="number"]::-webkit-inner-spin-button,
@@ -389,6 +406,13 @@ input[type="number"] {
   display: flex;
   gap: 10px;
   margin-top: 20px;
+}
+
+.form-divider {
+  height: 1px;
+  background: var(--color-border);
+  border: none;
+  margin: 20px 0;
 }
 
 /* ---------- Banners and flash ---------- */
@@ -645,6 +669,158 @@ input[type="number"] {
 
 .data-table tr:last-child td {
   border-bottom: none;
+}
+
+/* ---------- New entry form ---------- */
+
+.entry-header-fields {
+  display: grid;
+  grid-template-columns: 150px 1fr 220px;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.line-item-header {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 0.8fr 0.9fr 0.9fr 1.4fr 32px;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0 2px 8px;
+}
+
+.line-item-row[hidden] {
+  display: none;
+}
+
+.line-item-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 0.8fr 0.9fr 0.9fr 1.4fr 32px;
+  gap: 8px;
+  align-items: start;
+  margin-bottom: 8px;
+}
+
+.line-item-row .field,
+.entry-header-fields .field {
+  margin-bottom: 0;
+}
+
+.line-item-row select,
+.line-item-row input {
+  width: 100%;
+}
+
+/* Small × icon button, not a boxed "Remove" button. */
+.icon-remove {
+  border: none;
+  background: transparent;
+  color: var(--color-text-faint);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px;
+  height: 35px;
+}
+
+.icon-remove:hover {
+  color: var(--color-danger);
+}
+
+/* Tag picker: selected categories show as colored chips with a × to
+   remove; a "+ tag" trigger expands a panel of colored pill buttons for
+   the remaining categories, click one to add it. */
+.tag-picker {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: white;
+  padding: 5px 6px;
+  min-height: 35px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  position: relative;
+}
+
+.tag-picker .tag {
+  gap: 4px;
+  padding-right: 5px;
+}
+
+.tag-picker .tag button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  padding: 0;
+}
+
+.tag-picker__trigger {
+  border: none;
+  background: transparent;
+  color: var(--color-text-faint);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.tag-picker__trigger:hover {
+  background: var(--color-hover);
+}
+
+.tag-picker__panel[hidden] {
+  display: none;
+}
+
+.tag-picker__panel {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 4px);
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 10px;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  width: max-content;
+  max-width: 260px;
+}
+
+.tag-picker__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--color-border);
+  background: white;
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+}
+.tag-picker__option[hidden] {
+  display: none;
+}
+
+.tag-picker__option:hover {
+  border-color: var(--color-text-faint);
+}
+
+.tag-picker__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 /* ---------- Modal ---------- */

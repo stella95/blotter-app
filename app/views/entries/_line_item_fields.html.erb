@@ -1,0 +1,59 @@
+<div class="line-item-row" data-row data-controller="line-item">
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :_destroy, data: { line_item_target: "destroy" } %>
+
+  <div class="field">
+    <%= f.collection_select :asset_id, Asset.tradeable.order(:symbol), :id, ->(a) { "#{a.symbol} #{a.name}" },
+          { include_blank: true }, { class: "asset-select" } %>
+    <%= link_to t("entries.new.new_asset"), new_asset_path, data: { turbo_frame: "asset_modal" }, class: "field-hint" %>
+  </div>
+
+  <div class="field">
+    <%= f.select :action, EntryLineItem.actions.keys.map { |a| [a.humanize, a] },
+          {}, { data: { line_item_target: "action", action: "change->line-item#sync" } } %>
+  </div>
+
+  <div class="field">
+    <%= f.number_field :quantity, step: "any",
+          data: { line_item_target: "quantity", action: "input->line-item#sync" } %>
+  </div>
+
+  <div class="field">
+    <%= f.number_field :price_per_unit, step: "any",
+          data: { line_item_target: "price", action: "input->line-item#sync" } %>
+  </div>
+
+  <div class="field">
+    <%= f.number_field :amount, step: "any",
+          data: { line_item_target: "amount", action: "blur->line-item#signFee" } %>
+  </div>
+
+  <div class="field">
+    <div class="tag-picker" data-controller="tag-picker">
+      <div data-tag-picker-target="selected">
+        <% current_user.categories.order(:name).each do |category| %>
+          <% color = category.color.presence || "#7a7a7a" %>
+          <span class="tag" hidden data-tag-picker-target="chip" data-category-id="<%= category.id %>"
+                style="background-color: color-mix(in srgb, <%= color %> 16%, white); color: <%= color %>;">
+            <%= category.name %>
+            <button type="button" data-action="tag-picker#remove" data-tag-picker-category-id-param="<%= category.id %>">&times;</button>
+            <%= hidden_field_tag f.field_name(:category_ids, multiple: true), category.id, id: nil, disabled: true %>
+          </span>
+        <% end %>
+      </div>
+      <button type="button" class="tag-picker__trigger" data-action="tag-picker#toggle">+ <%= t("entries.new.tag") %></button>
+      <div class="tag-picker__panel" hidden data-tag-picker-target="panel">
+        <% current_user.categories.order(:name).each do |category| %>
+          <% color = category.color.presence || "#7a7a7a" %>
+          <button type="button" class="tag-picker__option" data-tag-picker-target="option"
+                  data-category-id="<%= category.id %>"
+                  data-action="tag-picker#add" data-tag-picker-category-id-param="<%= category.id %>">
+            <span class="tag-picker__dot" style="background: <%= color %>;"></span><%= category.name %>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="icon-remove" data-action="line-item#remove" aria-label="<%= t("entries.new.remove_line") %>">&times;</button>
+</div>

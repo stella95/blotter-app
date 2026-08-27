@@ -91,6 +91,61 @@ RSpec.describe EntryLineItem do
     end
   end
 
+  describe "#display_description" do
+    it "prefers the line item's own note" do
+      line_item = build(:entry_line_item, notes: "Reinvested dividend", entry: build(:entry, description: "Monthly buy"))
+
+      expect(line_item.display_description).to eq("Reinvested dividend")
+    end
+
+    it "falls back to the entry's description when there is no note" do
+      line_item = build(:entry_line_item, notes: nil, entry: build(:entry, description: "Monthly buy"))
+
+      expect(line_item.display_description).to eq("Monthly buy")
+    end
+
+    it "falls back to the action and ticker when neither was filled in" do
+      asset = build(:asset, symbol: "AAPL")
+      line_item = build(:entry_line_item, action: :buy, notes: nil, asset:, entry: build(:entry, description: nil))
+
+      expect(line_item.display_description).to eq("Buy AAPL")
+    end
+  end
+
+  describe "filtering scopes" do
+    it ".for_user finds only line items belonging to that user" do
+      mine = create(:entry_line_item, entry: create(:entry))
+      create(:entry_line_item, entry: create(:entry))
+      user = mine.entry.portfolio.user
+
+      expect(described_class.for_user(user)).to contain_exactly(mine)
+    end
+
+    it ".in_portfolio narrows to one portfolio" do
+      user = create(:user)
+      brokerage = create(:portfolio, user:)
+      crypto = create(:portfolio, user:)
+      brokerage_line_item = create(:entry_line_item, entry: create(:entry, portfolio: brokerage))
+      create(:entry_line_item, entry: create(:entry, portfolio: crypto))
+
+      expect(described_class.in_portfolio(brokerage.id)).to contain_exactly(brokerage_line_item)
+    end
+
+    it ".with_action narrows to one action" do
+      buy = create(:entry_line_item, action: :buy)
+      create(:entry_line_item, :sell)
+
+      expect(described_class.with_action("buy")).to contain_exactly(buy)
+    end
+
+    it ".chronological orders most recent first" do
+      older = create(:entry_line_item, entry: create(:entry, occurred_on: 2.days.ago))
+      newer = create(:entry_line_item, entry: create(:entry, occurred_on: 1.day.ago))
+
+      expect(described_class.chronological).to eq([ newer, older ])
+    end
+  end
+
   describe "delegation" do
     it "reads occurred_on from its entry" do
       entry = create(:entry, occurred_on: Date.new(2026, 3, 1))

@@ -1,0 +1,57 @@
+<% content_for :title, t(".title") %>
+
+<div class="page-header">
+  <h1 class="page-title"><%= t(".title") %></h1>
+  <div style="display: flex; gap: 8px; align-items: center;">
+    <%= link_to t(".all_portfolios"), entries_path(request.query_parameters.except("portfolio_id")),
+          class: class_names("pill", active: params[:portfolio_id].blank?) %>
+    <% @portfolios.each do |portfolio| %>
+      <%= link_to portfolio.name, entries_path(request.query_parameters.merge(portfolio_id: portfolio.id)),
+            class: class_names("pill", active: params[:portfolio_id] == portfolio.id.to_s) %>
+    <% end %>
+    <%= link_to t(".new_entry"), new_entry_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<%= form_with url: entries_path, method: :get, html: { class: "filter-bar" } do |f| %>
+  <%= hidden_field_tag :portfolio_id, params[:portfolio_id] if params[:portfolio_id].present? %>
+
+  <%= f.select :asset_id, @assets.map { |a| [a.symbol, a.id] },
+        { include_blank: t(".all_assets"), selected: params[:asset_id] }, { onchange: "this.form.requestSubmit()" } %>
+
+  <%= f.select :entry_action, EntryLineItem.actions.keys.map { |a| [a.humanize, a] },
+        { include_blank: t(".all_actions"), selected: params[:entry_action] }, { onchange: "this.form.requestSubmit()" } %>
+<% end %>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th><%= t(".date") %></th>
+      <th><%= t(".description") %></th>
+      <th><%= t(".portfolio") %></th>
+      <th><%= t(".asset") %></th>
+      <th><%= t(".action") %></th>
+      <th><%= t(".qty") %></th>
+      <th><%= t(".amount") %></th>
+      <th><%= t(".categories") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @line_items.each do |line_item| %>
+      <tr>
+        <td><%= l(line_item.occurred_on, format: :long) %></td>
+        <td><%= line_item.display_description %></td>
+        <td><%= line_item.portfolio.name %></td>
+        <td><%= line_item.asset.symbol %></td>
+        <td><%= line_item.action.humanize %></td>
+        <td><%= line_item.quantity if line_item.unit_bearing? %></td>
+        <td><%= money(line_item.amount, line_item.asset.currency) %></td>
+        <td>
+          <% line_item.categories.each do |category| %>
+            <%= category_tag(category) %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

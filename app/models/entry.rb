@@ -11,8 +11,8 @@ class Entry < ApplicationRecord
   scope :chronological, -> { order(occurred_on: :desc, id: :desc) }
   scope :occurring_between, ->(from, to) { where(occurred_on: from..to) }
 
-  def total_amount
-    entry_line_items.sum(:amount)
+  def total_amount_by_currency
+    entry_line_items.includes(:asset).group_by { |li| li.asset.currency }.transform_values { |lis| lis.sum(&:amount) }
   end
 
   private
@@ -21,7 +21,7 @@ class Entry < ApplicationRecord
     return if occurred_on.blank?
     return unless occurred_on > today_for_owner
 
-    errors.add(:occurred_on, "cannot be in the future")
+    errors.add(:occurred_on, :future)
   end
 
   def today_for_owner

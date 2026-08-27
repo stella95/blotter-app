@@ -66,4 +66,16 @@ RSpec.describe Entry do
       expect(described_class.nested_attributes_options).to have_key(:entry_line_items)
     end
   end
+
+  describe "#total_amount_by_currency" do
+    it "keeps a EUR line and a USD line on the same entry apart, never blended into one number" do
+      entry = create(:entry)
+      eur_asset = create(:asset, currency: "EUR")
+      usd_asset = create(:asset, currency: "USD")
+      create(:entry_line_item, entry:, asset: eur_asset, quantity: 1, price_per_unit: 100, amount: -100)
+      create(:entry_line_item, entry:, asset: usd_asset, action: :fee, amount: -5)
+
+      expect(entry.total_amount_by_currency).to eq("EUR" => -100, "USD" => -5)
+    end
+  end
 end

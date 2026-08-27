@@ -14,6 +14,6 @@ class CategoryEntryLineItem < ApplicationRecord
     line_item_owner_id = entry_line_item.entry&.portfolio&.user_id
     return if line_item_owner_id.blank? || category.user_id == line_item_owner_id
 
-    errors.add(:category, "belongs to a different user")
+    errors.add(:category, :different_user)
   end
 end

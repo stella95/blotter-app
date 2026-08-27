@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :entries, only: %i[index new create]
+
   # path: avoids colliding with Rails' own asset pipeline prefix (/assets),
   # which is served by middleware ahead of the router. Route helper names
   # and the controller are unaffected, only the URL segment changes.
