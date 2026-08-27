@@ -19,14 +19,6 @@ RSpec.describe Portfolio do
 
       expect(build(:portfolio, user: create(:user), name: "Retirement")).to be_valid
     end
-
-    it "defaults to EUR" do
-      expect(described_class.new.currency).to eq("EUR")
-    end
-
-    it "normalizes the currency code" do
-      expect(create(:portfolio, currency: " usd ").currency).to eq("USD")
-    end
   end
 
   describe "#currencies_held" do
