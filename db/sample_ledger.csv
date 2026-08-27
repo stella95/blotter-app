@@ -1,0 +1,12 @@
+date,description,portfolio,portfolio_currency,asset_symbol,asset_name,asset_type,asset_currency,action,quantity,price_per_unit,amount,categories
+2026-08-01,Salary transfer in,Brokerage,EUR,EUR-CASH,Euro cash,cash,EUR,deposit,,,2000.00,Income
+2026-08-03,Monthly ETF purchase,Brokerage,EUR,VWCE,FTSE All-World UCITS ETF,etf,EUR,buy,12,104.20,-1250.40,Core
+2026-08-03,Monthly ETF purchase,Brokerage,EUR,EUR-CASH,Euro cash,cash,EUR,fee,,,-2.50,Fees
+2026-08-07,VWCE dividend,Brokerage,EUR,VWCE,FTSE All-World UCITS ETF,etf,EUR,dividend,,,18.60,Income
+2026-08-10,AAPL purchase,Brokerage,EUR,AAPL,Apple Inc.,stock,USD,buy,5,225.00,-1125.00,Core
+2026-08-14,Custody fee,Brokerage,EUR,EUR-CASH,Euro cash,cash,EUR,fee,,,-3.00,Fees
+2026-08-18,BTC purchase,Crypto,USD,BTC,Bitcoin,crypto,USD,buy,0.012,61000,-732.00,Speculative
+2026-08-20,Transfer in from exchange,Crypto,USD,BTC,Bitcoin,crypto,USD,transfer_in,0.005,,0,
+2026-08-22,AAPL trim,Brokerage,EUR,AAPL,Apple Inc.,stock,USD,sell,2,230.00,460.00,Core
+2026-08-24,Second ETF purchase,Brokerage,EUR,VWCE,FTSE All-World UCITS ETF,etf,EUR,buy,5,105.00,-525.00,Core
+2026-08-25,Crypto custody fee,Crypto,USD,USD-CASH,US dollar cash,cash,USD,fee,,,-5.00,Fees

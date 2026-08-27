@@ -16,6 +16,8 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Serialization for the JSON summary API [https://github.com/procore-oss/blueprinter]
 gem "blueprinter"
+# No longer a default gem as of Ruby 3.4; needed for CSV import/export
+gem "csv"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
