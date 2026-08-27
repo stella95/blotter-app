@@ -40,7 +40,10 @@
     <% if user_signed_in? %>
       <div class="app-shell">
         <aside class="sidebar">
-          <%= link_to t("app.name"), root_path, class: "sidebar__brand" %>
+          <div>
+            <%= link_to t("app.name"), root_path, class: "sidebar__brand" %>
+            <div class="sidebar__tagline"><%= t("app.tagline") %></div>
+          </div>
 
           <ul class="sidebar__nav">
             <li><%= link_to root_path, class: nav_item_class(root_path) do %>
@@ -74,7 +77,9 @@
         </aside>
 
         <main class="main">
-          <%= yield %>
+          <div class="page-card">
+            <%= yield %>
+          </div>
         </main>
       </div>
 

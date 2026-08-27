@@ -9,6 +9,7 @@ en:
 
   app:
     name: "Blotter"
+    tagline: "Portfolio Ledger"
 
   nav:
     dashboard: "Dashboard"

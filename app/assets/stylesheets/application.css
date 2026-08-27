@@ -17,11 +17,11 @@
   --color-border-subtle: oklch(0.94 0.01 95);
   --color-hover: oklch(0.96 0.01 95);
 
-  --color-accent: oklch(0.5 0.07 150);
-  --color-accent-hover: oklch(0.42 0.08 150);
-  --color-accent-contrast: oklch(0.99 0.01 150);
-  --color-accent-soft: oklch(0.94 0.02 150);
-  --color-accent-soft-text: oklch(0.4 0.07 150);
+  --color-accent: oklch(0.5 0.07 250);
+  --color-accent-hover: oklch(0.42 0.08 250);
+  --color-accent-contrast: oklch(0.99 0.01 250);
+  --color-accent-soft: oklch(0.94 0.02 250);
+  --color-accent-soft-text: oklch(0.4 0.07 250);
 
   --color-warning-bg: oklch(0.96 0.025 85);
   --color-warning-border: oklch(0.88 0.035 85);
@@ -89,6 +89,14 @@ h1, h2, h3 {
 }
 
 .sidebar {
+  /* Scoped overrides: every rule below still just reads var(--color-*), so
+     the sidebar goes dark without touching .nav-item, .account-link, etc. */
+  --color-surface: oklch(0.24 0.05 250);
+  --color-text: oklch(0.97 0.01 250);
+  --color-text-muted: oklch(0.75 0.03 250);
+  --color-border: oklch(0.34 0.05 250);
+  --color-hover: oklch(0.3 0.05 250);
+
   width: var(--sidebar-width);
   flex-shrink: 0;
   background: var(--color-surface);
@@ -107,6 +115,13 @@ h1, h2, h3 {
   padding: 0 8px;
   text-decoration: none;
   color: var(--color-text);
+}
+
+.sidebar__tagline {
+  padding: 0 8px;
+  font-size: 11.5px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
 }
 
 .sidebar__nav {
@@ -202,8 +217,21 @@ h1, h2, h3 {
   flex: 1;
   min-width: 0;
   padding: 32px 40px 64px;
-  max-width: 1180px;
+  max-width: 1440px;
   margin: 0 auto;
+  width: 100%;
+}
+
+/* The whole page sits in one outer card, cream page background showing as
+   a margin around it, rather than page content floating directly on it.
+   The accent top border is shared by every page automatically, since this
+   is the one wrapper the layout puts around all of them. */
+.page-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent);
+  border-radius: 20px;
+  padding: 32px 40px;
 }
 
 /* ---------- Page chrome ---------- */
