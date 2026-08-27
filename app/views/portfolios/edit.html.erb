@@ -1,0 +1,7 @@
+<% content_for :title, t(".browser_title", name: @portfolio.name) %>
+
+<div class="page-header">
+  <h1 class="page-title"><%= t(".heading") %></h1>
+</div>
+
+<%= render "form", portfolio: @portfolio %>

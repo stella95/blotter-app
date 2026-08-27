@@ -1,0 +1,43 @@
+<%= form_with model: asset do |form| %>
+  <% if asset.errors.any? %>
+    <div class="form-errors" role="alert">
+      <ul>
+        <% asset.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card">
+    <div class="field">
+      <%= form.label :symbol %>
+      <%= form.text_field :symbol, placeholder: "e.g. VWCE" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :name %>
+      <%= form.text_field :name %>
+    </div>
+
+    <div class="field">
+      <%= form.label :asset_type %>
+      <%= form.select :asset_type, Asset.asset_types.keys.map { |t| [t.humanize, t] } %>
+    </div>
+
+    <div class="field">
+      <%= form.label :currency %>
+      <%= form.select :currency, Asset::CURRENCIES.map { |code, label| ["#{label} (#{code})", code] },
+            selected: form.object.currency || "EUR" %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit class: "btn btn-primary" %>
+      <% if turbo_frame_request? %>
+        <button type="button" class="btn" data-action="modal#close"><%= t(".cancel") %></button>
+      <% else %>
+        <%= link_to t(".cancel"), assets_path, class: "btn" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

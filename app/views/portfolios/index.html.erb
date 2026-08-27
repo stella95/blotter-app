@@ -1,0 +1,18 @@
+<% content_for :title, t(".title") %>
+
+<div class="page-header">
+  <h1 class="page-title"><%= t(".title") %></h1>
+  <%= link_to t(".new_portfolio"), new_portfolio_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <ul class="record-list">
+    <% @portfolios.each do |portfolio| %>
+      <li>
+        <span class="record-list__label"><%= link_to portfolio.name, portfolio %></span>
+        <span class="record-list__meta"><%= portfolio.currencies_held.join(", ").presence || t(".no_holdings") %></span>
+        <%= button_to t(".archive"), archive_portfolio_path(portfolio), method: :patch, class: "btn" %>
+      </li>
+    <% end %>
+  </ul>
+</div>

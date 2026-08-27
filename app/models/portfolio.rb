@@ -1,7 +1,7 @@
 class Portfolio < ApplicationRecord
   belongs_to :user
 
-  has_many :entries, dependent: :destroy
+  has_many :entries, dependent: :restrict_with_error
   has_many :entry_line_items, through: :entries
   has_many :portfolio_snapshots, dependent: :destroy
 
@@ -20,5 +20,21 @@ class Portfolio < ApplicationRecord
 
   def archive!
     update!(archived_at: Time.current)
+  end
+
+  Holding = Struct.new(:asset, :quantity, :price, :value)
+
+  def current_holdings
+    entry_line_items.unit_bearing.includes(:asset).group_by(&:asset).filter_map do |asset, line_items|
+      quantity = line_items.sum(&:signed_quantity)
+      next if quantity.zero?
+
+      price = asset.latest_price&.price
+      Holding.new(asset, quantity, price, price && quantity * price)
+    end
+  end
+
+  def currencies_held
+    current_holdings.map { |holding| holding.asset.currency }.uniq.sort
   end
 end

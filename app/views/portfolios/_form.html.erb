@@ -1,0 +1,23 @@
+<%= form_with model: portfolio do |form| %>
+  <% if portfolio.errors.any? %>
+    <div class="form-errors" role="alert">
+      <ul>
+        <% portfolio.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="card">
+    <div class="field">
+      <%= form.label :name %>
+      <%= form.text_field :name %>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit class: "btn btn-primary" %>
+      <%= link_to t(".cancel"), portfolios_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>

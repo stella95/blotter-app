@@ -1,0 +1,5 @@
+<%= turbo_stream.update "asset_modal", "" %>
+
+<%= turbo_stream.append_all ".asset-select" do %>
+  <option value="<%= @asset.id %>"><%= @asset.symbol %> <%= @asset.name %></option>
+<% end %>

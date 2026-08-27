@@ -1,0 +1,20 @@
+<% content_for :title, t(".title") %>
+
+<% if turbo_frame_request? %>
+  <%= turbo_frame_tag "asset_modal" do %>
+    <div class="modal-card">
+      <div class="page-header">
+        <h1 class="page-title"><%= t(".title") %></h1>
+        <button type="button" class="icon-remove" data-action="modal#close" aria-label="<%= t(".close") %>">&times;</button>
+      </div>
+
+      <%= render "form", asset: @asset %>
+    </div>
+  <% end %>
+<% else %>
+  <div class="page-header">
+    <h1 class="page-title"><%= t(".title") %></h1>
+  </div>
+
+  <%= render "form", asset: @asset %>
+<% end %>

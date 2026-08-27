@@ -1,0 +1,40 @@
+<% content_for :title, t(".title") %>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title"><%= t(".title") %></h1>
+    <div class="page-subtitle"><%= t(".subtitle") %></div>
+  </div>
+  <%= link_to t(".new_asset"), new_asset_path, class: "btn btn-primary" %>
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th><%= t(".asset") %></th>
+      <th><%= t(".currency") %></th>
+      <th><%= t(".last_price") %></th>
+      <th><%= t(".last_updated") %></th>
+      <th><%= t(".set_new_price") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @assets.each do |asset| %>
+      <tr>
+        <td><strong><%= asset.symbol %></strong> <span class="record-list__meta"><%= asset.name %></span></td>
+        <td><%= asset.currency %></td>
+        <td><%= asset.latest_price ? money(asset.latest_price.price, asset.currency) : t(".no_price") %></td>
+        <td>
+          <% if asset.stale_price? %><span title="<%= t(".stale") %>">&#9679;</span><% end %>
+          <%= asset.latest_price ? l(asset.latest_price.as_of, format: :long) : "" %>
+        </td>
+        <td>
+          <%= form_with model: AssetPrice.new, url: asset_prices_path(asset), html: { style: "display: flex; gap: 6px;" } do |f| %>
+            <%= f.number_field :price, step: "0.000001", placeholder: t(".price_placeholder"), required: true, style: "width: 90px;" %>
+            <%= f.submit t(".set"), class: "btn btn-soft" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

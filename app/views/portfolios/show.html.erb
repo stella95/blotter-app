@@ -1,0 +1,16 @@
+<% content_for :title, @portfolio.name %>
+
+<div class="page-header">
+  <h1 class="page-title"><%= @portfolio.name %></h1>
+</div>
+
+<div class="card">
+  <p><strong><%= t(".currencies_held") %>:</strong> <%= @portfolio.currencies_held.join(", ").presence || t(".no_holdings") %></p>
+  <p><strong><%= t(".status") %>:</strong> <%= @portfolio.archived? ? t(".status_archived") : t(".status_active") %></p>
+
+  <div class="form-actions">
+    <%= link_to t(".edit"), edit_portfolio_path(@portfolio), class: "btn" %>
+    <%= link_to t(".all_portfolios"), portfolios_path, class: "btn" %>
+    <%= button_to t(".delete"), @portfolio, method: :delete, class: "btn btn-danger" %>
+  </div>
+</div>

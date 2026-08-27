@@ -80,6 +80,26 @@ RSpec.describe Asset do
     end
   end
 
+  describe "#stale_price?" do
+    it "is true with no price at all" do
+      expect(create(:asset)).to be_stale_price
+    end
+
+    it "is true when the latest price is over a week old" do
+      asset = create(:asset)
+      create(:asset_price, asset:, as_of: 8.days.ago)
+
+      expect(asset).to be_stale_price
+    end
+
+    it "is false when the latest price is recent" do
+      asset = create(:asset)
+      create(:asset_price, asset:, as_of: 1.day.ago)
+
+      expect(asset).not_to be_stale_price
+    end
+  end
+
   describe ".tradeable" do
     it "excludes retired assets" do
       live = create(:asset)

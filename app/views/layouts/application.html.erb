@@ -49,6 +49,9 @@
             <li><%= link_to portfolios_path, class: nav_item_class(portfolios_path) do %>
               <span class="nav-item__dot"></span><%= t("nav.portfolios") %>
             <% end %></li>
+            <li><%= link_to assets_path, class: nav_item_class(assets_path) do %>
+              <span class="nav-item__dot"></span><%= t("nav.assets") %>
+            <% end %></li>
           </ul>
 
           <div class="sidebar__footer">
@@ -65,6 +68,8 @@
           <%= yield %>
         </main>
       </div>
+
+      <%= turbo_frame_tag "asset_modal", data: { controller: "modal", action: "click->modal#backdropClick" } %>
     <% else %>
       <%= yield %>
     <% end %>
