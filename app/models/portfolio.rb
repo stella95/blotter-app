@@ -35,6 +35,39 @@ class Portfolio < ApplicationRecord
     current_holdings.map { |holding| holding.asset.currency }.uniq.sort
   end
 
+  # Average cost, not FIFO or LIFO: total spent on buys divided by total
+  # quantity bought, times what's still held. Simpler to compute and to
+  # audit than tracking individual lots, at the cost of not distinguishing
+  # which specific shares were sold.
+  def cost_basis_by_currency
+    total_cost_by_asset = entry_line_items.where(action: "buy").includes(:asset)
+                                           .group_by(&:asset)
+                                           .transform_values { |lines| lines.sum(&:amount).abs }
+    total_quantity_by_asset = entry_line_items.where(action: "buy")
+                                               .group_by(&:asset_id)
+                                               .transform_values { |lines| lines.sum(&:quantity) }
+
+    current_holdings.group_by { |holding| holding.asset.currency }.transform_values do |holdings|
+      holdings.sum do |holding|
+        bought = total_quantity_by_asset[holding.asset.id]
+        next 0 if bought.blank? || bought.zero?
+
+        (total_cost_by_asset[holding.asset] / bought) * holding.quantity
+      end
+    end
+  end
+
+  def net_cash_flow_by_currency
+    entry_line_items.where(action: %w[deposit withdrawal]).includes(:asset)
+                     .group_by { |line_item| line_item.asset.currency }
+                     .transform_values { |lines| lines.sum(&:amount) }
+  end
+
+  def unpriced_counts_by_currency
+    current_holdings.group_by { |holding| holding.asset.currency }
+                     .transform_values { |holdings| holdings.count { |h| h.price.nil? } }
+  end
+
   def self.combined_holdings(portfolios)
     portfolios.flat_map(&:current_holdings)
               .group_by(&:asset)

@@ -40,6 +40,7 @@ en:
       view_all: "View all"
       no_entries: "No entries yet."
       chart_pending: "A value over time chart lands here once the nightly snapshot job has a few days of history to show."
+      value_over_time: "Value over time"
 
   portfolios:
     index:

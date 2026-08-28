@@ -9,5 +9,11 @@ class DashboardController < ApplicationController
                                        .includes(:asset, :categories, entry: :portfolio)
                                        .chronological
                                        .first(5)
+    @value_over_time_by_currency = PortfolioSnapshot.where(portfolio: @portfolios)
+                                                      .distinct.pluck(:currency).index_with do |currency|
+      PortfolioSnapshot.where(portfolio: @portfolios, currency:)
+                        .group_by_day(:captured_on)
+                        .sum(:total_market_value)
+    end
   end
 end

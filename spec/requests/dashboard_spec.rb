@@ -78,6 +78,29 @@ RSpec.describe "Dashboard" do
     expect(response.body).to include("$1,000.00")
   end
 
+  it "shows the pending message when there is no snapshot history yet" do
+    user = create(:user)
+    sign_in user
+    create(:portfolio, user:)
+
+    get root_path
+
+    expect(response.body).to include(I18n.t("dashboard.index.chart_pending"))
+  end
+
+  it "charts value over time once the nightly job has recorded history" do
+    user = create(:user)
+    sign_in user
+    portfolio = create(:portfolio, user:)
+    create(:portfolio_snapshot, portfolio:, currency: "EUR", captured_on: 2.days.ago)
+    create(:portfolio_snapshot, portfolio:, currency: "EUR", captured_on: 1.day.ago)
+
+    get root_path
+
+    expect(response.body).to include(I18n.t("dashboard.index.value_over_time"))
+    expect(response.body).not_to include(I18n.t("dashboard.index.chart_pending"))
+  end
+
   it "warns when some held assets have no price yet" do
     user = create(:user)
     sign_in user

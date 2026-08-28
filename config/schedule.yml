@@ -1,0 +1,4 @@
+nightly_snapshot:
+  cron: "0 23 * * *"
+  class: "NightlySnapshotJob"
+  description: "Records each portfolio's holdings value, cost basis, and cash flow for the day"
