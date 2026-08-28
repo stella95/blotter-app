@@ -29,6 +29,24 @@ RSpec.describe "Devise sign in and sign up" do
     expect(response).to have_http_status(:ok)
   end
 
+  it "does not show the default Signed in successfully flash, the dashboard is confirmation enough" do
+    user = create(:user, password: "Correct-Horse-Battery-9")
+
+    post user_session_path, params: { user: { email: user.email, password: "Correct-Horse-Battery-9" } }
+    follow_redirect!
+
+    expect(response.body).not_to include(I18n.t("devise.sessions.signed_in"))
+  end
+
+  it "does not show the default Signed out successfully flash either" do
+    sign_in create(:user)
+
+    delete destroy_user_session_path
+    follow_redirect!
+
+    expect(response.body).not_to include(I18n.t("devise.sessions.signed_out"))
+  end
+
   it "shows the forgot password form" do
     get new_user_password_path
 

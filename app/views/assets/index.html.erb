@@ -12,6 +12,7 @@
   <thead>
     <tr>
       <th><%= t(".asset") %></th>
+      <th><%= t(".type") %></th>
       <th><%= t(".currency") %></th>
       <th><%= t(".last_price") %></th>
       <th><%= t(".last_updated") %></th>
@@ -22,6 +23,10 @@
     <% @assets.each do |asset| %>
       <tr>
         <td><strong><%= asset.symbol %></strong> <span class="record-list__meta"><%= asset.name %></span></td>
+        <td>
+          <span class="legend__dot" style="display: inline-block; background: <%= Asset::TYPE_COLORS[asset.asset_type] %>;"></span>
+          <%= asset.asset_type.humanize %>
+        </td>
         <td><%= asset.currency %></td>
         <td><%= asset.latest_price ? money(asset.latest_price.price, asset.currency) : t(".no_price") %></td>
         <td>

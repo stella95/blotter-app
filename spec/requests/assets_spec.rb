@@ -15,6 +15,14 @@ RSpec.describe "Assets" do
       expect(response.body).to include(live.symbol)
       expect(response.body).not_to include("OLD")
     end
+
+    it "shows each asset's type" do
+      create(:asset, symbol: "BTC", asset_type: :crypto)
+
+      get assets_path
+
+      expect(response.body).to include("Crypto")
+    end
   end
 
   describe "GET /assets/new" do

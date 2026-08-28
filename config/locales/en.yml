@@ -81,6 +81,7 @@ en:
       subtitle: "Prices are entered by hand, keep this quick."
       new_asset: "New asset"
       asset: "Asset"
+      type: "Type"
       currency: "Currency"
       last_price: "Last price"
       last_updated: "Last updated"
