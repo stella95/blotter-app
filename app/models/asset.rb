@@ -3,6 +3,18 @@ class Asset < ApplicationRecord
 
   CURRENCIES = { "EUR" => "Euro", "USD" => "US dollar" }.freeze
 
+  # A fixed palette for the six asset types, not user editable like a
+  # category color, so the dashboard's allocation chart and legend can
+  # share the same color for "etf" everywhere without looking it up twice.
+  TYPE_COLORS = {
+    "etf" => "#3b7a57",
+    "stock" => "#b5651d",
+    "bond" => "#4a7ba6",
+    "cash" => "#a68b4a",
+    "crypto" => "#7a4a9e",
+    "mutual_fund" => "#607d8b"
+  }.freeze
+
   has_many :asset_prices, dependent: :destroy
   has_many :entry_line_items, dependent: :restrict_with_error
 

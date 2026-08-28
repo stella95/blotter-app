@@ -101,6 +101,44 @@ RSpec.describe "Dashboard" do
     expect(response.body).not_to include(I18n.t("dashboard.index.chart_pending"))
   end
 
+  it "filters everything down to one portfolio when portfolio_id is given" do
+    user = create(:user)
+    sign_in user
+    asset = create(:asset, symbol: "VWCE")
+    create(:asset_price, asset:, price: 100, as_of: 1.day.ago)
+    retirement = create(:portfolio, user:, name: "Retirement")
+    brokerage = create(:portfolio, user:, name: "Brokerage")
+    create(:entry_line_item, entry: create(:entry, portfolio: retirement, description: "Retirement buy"), asset:, quantity: 4, price_per_unit: 90, amount: -360)
+    create(:entry_line_item, entry: create(:entry, portfolio: brokerage, description: "Brokerage buy"), asset:, quantity: 6, price_per_unit: 90, amount: -540)
+
+    get root_path(portfolio_id: retirement.id)
+
+    expect(response.body).to include("$400.00")
+    expect(response.body).not_to include("$1,000.00")
+    expect(response.body).to include("Retirement buy")
+    expect(response.body).not_to include("Brokerage buy")
+  end
+
+  it "shows allocation by asset type as a percent of that currency's value" do
+    user = create(:user)
+    sign_in user
+    portfolio = create(:portfolio, user:)
+    etf = create(:asset, asset_type: :etf, currency: "EUR")
+    bond = create(:asset, asset_type: :bond, currency: "EUR")
+    create(:asset_price, asset: etf, price: 80, as_of: 1.day.ago)
+    create(:asset_price, asset: bond, price: 20, as_of: 1.day.ago)
+    create(:entry_line_item, entry: create(:entry, portfolio:), asset: etf, quantity: 1, price_per_unit: 80, amount: -80)
+    create(:entry_line_item, entry: create(:entry, portfolio:), asset: bond, quantity: 1, price_per_unit: 20, amount: -20)
+
+    get root_path
+
+    expect(response.body).to include(I18n.t("dashboard.index.allocation_by_type"))
+    expect(response.body).to include("Etf")
+    expect(response.body).to include("80.0%")
+    expect(response.body).to include("Bond")
+    expect(response.body).to include("20.0%")
+  end
+
   it "warns when some held assets have no price yet" do
     user = create(:user)
     sign_in user

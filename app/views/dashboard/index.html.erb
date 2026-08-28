@@ -5,6 +5,15 @@
     <h1 class="page-title"><%= t(".title") %></h1>
     <div class="page-subtitle"><%= t(".as_of", date: l(Date.current, format: :full)) %></div>
   </div>
+  <% if @all_portfolios.any? %>
+    <div style="display: flex; gap: 8px;">
+      <%= link_to t(".all_portfolios"), root_path, class: class_names("pill", active: params[:portfolio_id].blank?) %>
+      <% @all_portfolios.each do |portfolio| %>
+        <%= link_to portfolio.name, root_path(portfolio_id: portfolio.id),
+              class: class_names("pill", active: params[:portfolio_id] == portfolio.id.to_s) %>
+      <% end %>
+    </div>
+  <% end %>
 </div>
 
 <% if @portfolios.empty? %>
@@ -33,12 +42,69 @@
     </div>
   <% end %>
 
-  <% if @value_over_time_by_currency.present? %>
-    <div class="card" style="margin-bottom: 16px;">
-      <div style="font-weight: 600; margin-bottom: 12px;"><%= t(".value_over_time") %></div>
-      <% @value_over_time_by_currency.each do |currency, series| %>
-        <%= line_chart series, prefix: currency == "USD" ? "$" : "#{currency} ", library: { scales: { y: { beginAtZero: false } } } %>
+  <% currencies = (@value_over_time_by_currency.keys | @allocation_by_currency.keys) %>
+  <% if currencies.any? %>
+    <div data-controller="currency-tabs" style="margin-bottom: 16px;">
+      <% if currencies.size > 1 %>
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-bottom: 10px;">
+          <span class="page-subtitle" style="margin: 0;"><%= t(".showing_currency") %></span>
+          <div class="pill-toggle">
+            <% currencies.each_with_index do |currency, index| %>
+              <button type="button" class="<%= class_names("pill-toggle__option", active: index.zero?) %>"
+                      data-currency-tabs-target="tab" data-currency="<%= currency %>"
+                      data-action="currency-tabs#select" data-currency-tabs-currency-param="<%= currency %>">
+                <%= currency %>
+              </button>
+            <% end %>
+          </div>
+        </div>
       <% end %>
+
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px;">
+        <div class="card">
+          <div style="font-weight: 600; margin-bottom: 12px;"><%= t(".value_over_time") %></div>
+        <% currencies.each_with_index do |currency, index| %>
+          <div data-currency-tabs-target="panel" data-currency="<%= currency %>" <%= "hidden" unless index.zero? %>>
+            <% if @value_over_time_by_currency[currency].present? %>
+              <%= line_chart @value_over_time_by_currency[currency],
+                    prefix: currency == "USD" ? "$" : "#{currency} ",
+                    library: { scales: { y: { beginAtZero: false } } } %>
+            <% else %>
+              <p class="page-subtitle" style="margin-top: 0;"><%= t(".chart_pending") %></p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="card">
+        <div style="font-weight: 600; margin-bottom: 12px;"><%= t(".allocation_by_type") %></div>
+        <% currencies.each_with_index do |currency, index| %>
+          <div data-currency-tabs-target="panel" data-currency="<%= currency %>" <%= "hidden" unless index.zero? %>>
+            <% allocation = @allocation_by_currency[currency] %>
+            <% if allocation.blank? %>
+              <p class="page-subtitle" style="margin-top: 0;"><%= t(".no_allocation") %></p>
+            <% else %>
+              <div style="display: flex; gap: 16px; align-items: center;">
+                <div style="width: 120px; flex-shrink: 0;">
+                  <%= pie_chart allocation, donut: true,
+                        colors: allocation.keys.map { |type| Asset::TYPE_COLORS[type] },
+                        library: { plugins: { legend: { display: false }, tooltip: { enabled: false } } } %>
+                </div>
+                <ul class="legend" style="flex: 1;">
+                  <% allocation.each do |type, percent| %>
+                    <li>
+                      <span class="legend__dot" style="background: <%= Asset::TYPE_COLORS[type] %>;"></span>
+                      <span class="legend__label"><%= type.humanize %></span>
+                      <strong><%= percent %>%</strong>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        </div>
+      </div>
     </div>
   <% else %>
     <p class="page-subtitle" style="margin-bottom: 16px;"><%= t(".chart_pending") %></p>

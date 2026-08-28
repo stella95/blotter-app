@@ -136,6 +136,37 @@ RSpec.describe Portfolio do
     end
   end
 
+  describe ".allocation_by_type" do
+    it "percentages one currency's holdings by asset type" do
+      etf = create(:asset, asset_type: :etf, currency: "EUR")
+      bond = create(:asset, asset_type: :bond, currency: "EUR")
+      holdings = [
+        Portfolio::Holding.new(etf, 1, 80, 80),
+        Portfolio::Holding.new(bond, 1, 20, 20)
+      ]
+
+      expect(described_class.allocation_by_type(holdings, "EUR")).to eq("etf" => 80.0, "bond" => 20.0)
+    end
+
+    it "never blends currencies into one breakdown" do
+      eur_asset = create(:asset, asset_type: :etf, currency: "EUR")
+      usd_asset = create(:asset, asset_type: :crypto, currency: "USD")
+      holdings = [
+        Portfolio::Holding.new(eur_asset, 1, 100, 100),
+        Portfolio::Holding.new(usd_asset, 1, 100, 100)
+      ]
+
+      expect(described_class.allocation_by_type(holdings, "EUR")).to eq("etf" => 100.0)
+    end
+
+    it "is empty when nothing in that currency has a price" do
+      unpriced = create(:asset, currency: "EUR")
+      holdings = [ Portfolio::Holding.new(unpriced, 1, nil, nil) ]
+
+      expect(described_class.allocation_by_type(holdings, "EUR")).to eq({})
+    end
+  end
+
   describe "deletion" do
     it "is blocked once the portfolio has entries" do
       portfolio = create(:portfolio)

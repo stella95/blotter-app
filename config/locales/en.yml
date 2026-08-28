@@ -25,6 +25,7 @@ en:
     index:
       title: "Dashboard"
       as_of: "As of %{date}"
+      all_portfolios: "All"
       empty: "No portfolios yet."
       create_first: "Create your first portfolio"
       no_holdings: "No open positions yet."
@@ -41,6 +42,9 @@ en:
       no_entries: "No entries yet."
       chart_pending: "A value over time chart lands here once the nightly snapshot job has a few days of history to show."
       value_over_time: "Value over time"
+      showing_currency: "Showing"
+      allocation_by_type: "Allocation by type"
+      no_allocation: "Nothing priced yet"
 
   portfolios:
     index:

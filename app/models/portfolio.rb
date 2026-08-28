@@ -88,4 +88,19 @@ class Portfolio < ApplicationRecord
       portfolio.currencies_held.each { |currency| names[currency] << portfolio.name }
     end.transform_values { |names| names.join(" + ") }
   end
+
+  # Percent of that currency's value held in each asset type. Blending two
+  # currencies into one percentage breakdown would quietly assume an
+  # exchange rate between them, so this is always scoped to a single
+  # currency, same rule as every other total in the app.
+  def self.allocation_by_type(holdings, currency)
+    priced = holdings.select { |holding| holding.asset.currency == currency && holding.value }
+    total = priced.sum(&:value)
+    return {} if total.zero?
+
+    priced.group_by { |holding| holding.asset.asset_type }
+          .transform_values { |hs| (hs.sum(&:value).to_f / total * 100).round(1) }
+          .sort_by { |_type, percent| -percent }
+          .to_h
+  end
 end
