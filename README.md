@@ -53,8 +53,21 @@ describes it or is derived from it.
 ## Status
 
 Portfolios, Assets, Entries, Categories, and a live Dashboard are built
-and tested, 177 specs passing, rubocop clean. A nightly snapshot job, a
-value over time chart, and CSV export are next.
+and tested, 191 specs passing, rubocop clean. A nightly job snapshots
+each portfolio's value, feeding a value-over-time chart and an
+allocation-by-type breakdown on the dashboard. Categories edit, CSV
+export, and a JSON API are next.
+
+## Next: natural language entry
+
+Type something like:
+
+> bought 3 VWCE at 124.50 yesterday, 2 euro broker fee
+
+and the New Entry form comes back filled in: one entry dated yesterday, a
+buy line for 3 units at 124.50, and a separate fee line for 2. Nothing
+gets written until you look it over and press save yourself, an LLM only
+ever fills the form, it never touches the ledger directly.
 
 ## Run it
 
