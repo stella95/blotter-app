@@ -33,3 +33,7 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+
+# Deploy-time server config (systemd units, env-file templates). Kept locally,
+# never committed: it names internal hosts, paths, DB roles, and env-var sets.
+/config/deploy/
