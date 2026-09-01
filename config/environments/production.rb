@@ -24,6 +24,11 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
+  # Active Storage is loaded by default but nothing in the app attaches files
+  # or generates variants. Without this, eager loading in production demands
+  # the image_processing gem (and libvips/ImageMagick) for a feature unused here.
+  config.active_storage.variant_processor = :disabled
+
   # TLS is terminated by an upstream reverse proxy that forwards the request
   # over plain HTTP with X-Forwarded-Proto set. Trust that header so force_ssl
   # does not redirect-loop.
