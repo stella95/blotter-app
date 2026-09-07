@@ -1,5 +1,13 @@
 # Blotter
 
+## Live Demo
+
+**[demo.blotter.cc](https://demo.blotter.cc)**, log in with `demo@blotter.cc` / `DemoBlotter2026!`.
+
+Sample data, resets nightly. Sign up is closed everywhere else in the app.
+
+---
+
 Every portfolio tracker I tried was either a spreadsheet with no
 structure or a product with more opinions about my money than I have. I
 wanted something smaller than that: enter what actually happened, see
@@ -14,7 +22,7 @@ didn't ask for.
 
 ## Stack
 
-Ruby 3.4.2, Rails 8.1, PostgreSQL. Hotwire (Turbo + Stimulus), Devise for
+Ruby 3.4.9, Rails 8.1, PostgreSQL. Hotwire (Turbo + Stimulus), Devise for
 auth, Sidekiq with sidekiq-cron for scheduled work, Blueprinter for JSON,
 RSpec with FactoryBot and shoulda-matchers.
 
@@ -53,7 +61,7 @@ describes it or is derived from it.
 ## Status
 
 Portfolios, Assets, Entries, Categories, and a live Dashboard are built
-and tested, 191 specs passing, rubocop clean. A nightly job snapshots
+and tested, 190 specs passing, rubocop clean. A nightly job snapshots
 each portfolio's value, feeding a value-over-time chart and an
 allocation-by-type breakdown on the dashboard. Categories edit, CSV
 export, and a JSON API are next.
