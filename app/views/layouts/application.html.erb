@@ -68,10 +68,10 @@
 
           <div class="sidebar__footer">
             <hr class="sidebar__divider">
-            <%= link_to edit_user_registration_path, class: "account-link" do %>
+            <div class="account-link">
               <span class="avatar"><%= (current_user.short_name || current_user.email).first(2).upcase %></span>
-              <%= current_user.short_name || current_user.email %> &mdash; <%= t("nav.account_suffix") %>
-            <% end %>
+              <%= current_user.short_name || current_user.email %>
+            </div>
             <%= button_to t("nav.sign_out"), destroy_user_session_path, method: :delete, class: "account-link", form: { style: "width: 100%" } %>
           </div>
         </aside>

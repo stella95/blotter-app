@@ -12,11 +12,10 @@ RSpec.describe "Devise sign in and sign up" do
     expect(response.body).to include('action="/users/sign_in"')
   end
 
-  it "shows the sign up form while logged out, without redirecting" do
-    get new_user_registration_path
+  it "no longer offers public sign up, registration is closed" do
+    get "/users/sign_up"
 
-    expect(response).to have_http_status(:ok)
-    expect(response.body).to include('action="/users"')
+    expect(response).to have_http_status(:not_found)
   end
 
   it "signs a user in and reaches the dashboard" do
@@ -53,12 +52,12 @@ RSpec.describe "Devise sign in and sign up" do
     expect(response).to have_http_status(:ok)
   end
 
-  it "shows the account edit form once signed in" do
+  it "no longer offers self-service account editing, that route is closed" do
     sign_in create(:user)
 
-    get edit_user_registration_path
+    get "/users/edit"
 
-    expect(response).to have_http_status(:ok)
+    expect(response).to have_http_status(:not_found)
   end
 
   it "shows the reset password form given a real token" do
@@ -71,24 +70,19 @@ RSpec.describe "Devise sign in and sign up" do
   end
 
   describe "email confirmation" do
-    it "sends a confirmation email on sign up and blocks sign in until confirmed" do
+    it "no longer accepts a public sign up submission, that route is closed" do
       expect {
-        post user_registration_path, params: {
+        post "/users", params: {
           user: {
             first_name: "Marta", last_name: "Berg", email: "marta@example.com",
             password: "Correct-Horse-Battery-9",
             password_confirmation: "Correct-Horse-Battery-9"
           }
         }
-      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      }.not_to change { ActionMailer::Base.deliveries.count }
 
-      user = User.find_by(email: "marta@example.com")
-      expect(user).not_to be_confirmed
-
-      post user_session_path, params: { user: { email: user.email, password: "Correct-Horse-Battery-9" } }
-      follow_redirect!
-
-      expect(response.body).to include(I18n.t("devise.failure.unconfirmed"))
+      expect(response).to have_http_status(:not_found)
+      expect(User.find_by(email: "marta@example.com")).to be_nil
     end
 
     it "allows sign in once the real confirmation link is followed" do
@@ -166,16 +160,11 @@ RSpec.describe "Devise sign in and sign up" do
       expect(user.last_sign_in_ip).to be_present
     end
 
-    it "shows the last sign in time on the account page, but not the IP" do
-      user = create(:user, password: "Correct-Horse-Battery-9")
-      post user_session_path, params: { user: { email: user.email, password: "Correct-Horse-Battery-9" } }
-      user.reload
-
-      get edit_user_registration_path
-
-      expect(response.body).to include(I18n.l(user.last_sign_in_at, format: :long))
-      expect(response.body).not_to include(user.last_sign_in_ip)
-    end
+    # Last sign in time used to be shown on the account edit page. That page
+    # is gone now that self-service account editing is closed (see the
+    # "email confirmation" and top-level specs above), so there's currently
+    # no UI surface displaying it. Tracking itself is still covered by
+    # "records sign in count and IP after a successful sign in" above.
   end
 
   describe "session timeout" do

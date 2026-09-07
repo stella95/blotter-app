@@ -1,9 +1,8 @@
-<% # local: active (one of :signin, :signup, :reset) %>
+<% # local: active (one of :signin, :reset). Sign-up is closed, this app
+   # doesn't accept public registrations. %>
 <div class="auth-mode-switch">
   <%= link_to t(".sign_in"), new_user_session_path,
         class: class_names("auth-mode-pill", active: active == :signin) %>
-  <%= link_to t(".sign_up"), new_user_registration_path,
-        class: class_names("auth-mode-pill", active: active == :signup) %>
   <%= link_to t(".reset"), new_user_password_path,
         class: class_names("auth-mode-pill", active: active == :reset) %>
 </div>
