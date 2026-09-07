@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Nightly self-heal for the public demo account (demo.blotter.cc). Wipes and
+# reseeds ONLY the one user given by DEMO_EMAIL (see lib/tasks/demo.rake),
+# never touches any other account. Meant to be triggered once a day by a
+# Plesk Scheduled Task pointed at this script.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+# shellcheck disable=SC1090
+source "$HOME/.blotter_demo_env"
+
+bundle exec rails demo:reset >> log/demo_reset.log 2>&1
